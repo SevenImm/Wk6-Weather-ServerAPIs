@@ -47,6 +47,28 @@ function init() {
     }
 }
 
+// Function to clear the local storage and reset search History
+function clearStorage() {
+    // Clear the local Storage
+    localStorage.removeItem('cityHistory');
+
+    // Clear the search history displayed on the page
+    $cityList.innerHTML = '';
+
+    // Clear the current weather data
+    $currentWeatherCard.innerHTML = '';
+}
+// Event listener for the Clear local storage button
+$clearStorageBtn.addEventListener('click', clearStorage);
+
+// Event Listener for the search button
+$searchBtn.addEventListener('click', () => {
+    const city = $input.value.trim();
+    if (city) {
+        fetchWeatherData(city);
+        $input.value = ''; //Clear the input field
+    }
+});
 // initialice the object
 let cityHistory = [];
 // Add city data to the array
