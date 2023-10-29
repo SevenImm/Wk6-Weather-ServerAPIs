@@ -96,6 +96,32 @@ function displayWeatherData(data) {
     <p>Wind Speed: ${windSpeed} m/s </p>
     <img src='https://openweathermap.org/img/w/${icon}.png' alt='Weather icon">
     `;
+    // Extract and display the 5-day forecast
+    const forecast = data.list.slice(1, 6);
+    const $forecastList = document.createElement('ul');
+    $forecastList.className = 'list-group';
+
+    forecast.forEach((day) => {
+        const forecastDate = day.dt_txt;
+        const forecastTemp = day.main.temp;
+        const forecastHumidity = day.main.humidity;
+        const forecastWindSpeed = day.wind.speed;
+        const forecastIcon = day.weather[0].icon;
+
+        const $item = document.createElement('li');
+        $item.className = 'list-group-item bg-info-subtle';
+        $item.innerHTML = `
+        <p>Date:${forecastDate}</p>
+        <p>Temperature:${forecastTemp} °F</p>
+        <p>Humidity:${forecastHumidity}%</p>
+        <p>Wind Speed: ${forecastWindSpeed} m/s </p>
+        <img src='https://openweathermap.org/img/w/${forecastIcon}.png' alt='Weather icon">
+        `;
+        $forecastList.appendChild($item);
+        });
+
+        // Append the forecast list to the curent weather card
+        $currentWeatherCard.appendChild($forecastList);
 }
 
 // Event Listener for the search button
@@ -106,13 +132,4 @@ $searchBtn.addEventListener('click', () => {
         $input.value = ''; //Clear the input field
     }
 });
-// initialice the object
-let cityHistory = [];
-// Add city data to the array
-cityHistory.push('seattle');
-cityHistory.push('Laredo');
-
-// save the updated city history to local storage
-localStorage.setItem('cityHistory', JSON.stringify(cityHistory));
-// verify inputs in console
-console.log(localStorage.cityHistory);
+window.addEventListener('load', init);
