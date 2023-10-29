@@ -61,6 +61,43 @@ function clearStorage() {
 // Event listener for the Clear local storage button
 $clearStorageBtn.addEventListener('click', clearStorage);
 
+// Function fetch weather data from the OpenWeatherMap API
+function fetchWeatherData(city) {
+    // API URL + Added unit (farenheit)
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${APIkey}&units=imperial `;
+    fetch(url)
+    .then((Response) => Response.json())
+    .then((data) => {
+        // process the weather data
+        displayWeatherData(data);
+        // add the city to history
+        addToHistory(city);
+    })
+    .catch((Error) => {
+        console.error('Error fetching data:', Error);
+    });
+}
+// Get weather data and display it to the page
+function displayWeatherData(data) {
+    const name = data.city.name;
+    const current = data.list[0];
+    const date = current.dt_txt;
+    const temp = current.main.temp;
+    const humidity = current.main.humidity;
+    const windSpeed = current.wind.speed;
+    const icon = current.weather[0].icon;
+
+    // update the HTML elements with this data
+    $currentWeatherCard.innerHTML = `
+    <h2>${name}</h2>
+    <p>Date:${date}</p>
+    <p>Temperature:${temp} °F</p>
+    <p>Humidity:${humidity}%</p>
+    <p>Wind Speed: ${windSpeed} m/s </p>
+    <img src='https://openweathermap.org/img/w/${icon}.png' alt='Weather icon">
+    `;
+}
+
 // Event Listener for the search button
 $searchBtn.addEventListener('click', () => {
     const city = $input.value.trim();
